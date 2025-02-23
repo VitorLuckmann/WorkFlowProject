@@ -36,9 +36,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Check Render Deploy Hook value
+        run: echo "Render Deploy Hook: $RENDER_DEPLOY_HOOK" # Verifique se o segredo está correto
+
       - name: Deploy to Render
         run: |
-          curl -X POST "$RENDER_DEPLOY_HOOK"
+          if [ -z "$RENDER_DEPLOY_HOOK" ]; then
+            echo "ERROR: RENDER_DEPLOY_HOOK is not set!";
+            exit 1;
+          fi
+          curl -X POST "$RENDER_DEPLOY_HOOK" # Certifique-se de que a URL esteja correta
 
     env:
       RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
